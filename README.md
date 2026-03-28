@@ -1,54 +1,38 @@
-# Video Subtitle Generator
+# Real-Time Subtitle Generators
 
-This project generates real-time subtitles for videos that do not have subtitles by capturing system audio, transcribing speech using Whisper, and displaying subtitles as an on-screen overlay.
+This repository contains two separate projects for generating real-time subtitles.
 
-It works for:
+The aim is to solve the problem of inability to understand the content of videos due to language barriers, by providing real-time subtitles that can be translated into any language.
 
-- YouTube videos
-- Movies
-- Online courses
-- Video players
-- Any system audio
+1. **Audio-based Subtitle Generator** (`audio_subtitle_generator`)  
+   Generates subtitles by capturing system audio, transcribing speech, and displaying them as an overlay.
 
-## Features
+2. **Video-based Subtitle Generator** (`video_subtitle_generation`)  
+   Generates subtitles by capturing video screen regions, performing OCR on on-screen subtitles (e.g., in Chinese), translating them, and displaying English translations as an overlay.
+
+>
+>Both projects utilize multi-threaded pipelines to ensure real-time performance and are designed to be modular for easy extension and customization.
+>
+>Both can run offline once the necessary models and dependencies are set up.
+
+---
+
+## 1. Audio-based Subtitle Generator
+
+**Location:** `audio_subtitle_generator/`
+
+Generates real-time subtitles from **system audio**.
+
+### Features
 
 - Captures system audio using FFmpeg
 - Transcribes speech using Faster-Whisper
 - Translates speech to English
 - Displays live subtitle overlay
-- Runs fully offline
-- Multi-threaded pipeline
-
-## Project Structure
-
-```bash
-project/
-│
-├── app.py
-├── audio_capture.py
-├── transcriber.py
-├── overlay.py
-├── models/
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
-
-### Files Overview
-
-| File              | Purpose                               |
-|-------------------|---------------------------------------|
-|app.py             | Main entry point, starts threads      |
-|audio_capture.py   | Captures system audio using FFmpeg    |
-|transcriber.py     | Converts audio → text using Whisper   |
-|overlay.py         | Displays subtitles overlay window     |
-|models/            | Whisper model files                   |
-
-## How It Works
 
 ### Pipeline
 
-```bash
+```text
 System Audio
      ↓
 FFmpeg Audio Capture
@@ -62,47 +46,33 @@ Text Queue
 Subtitle Overlay Window
 ```
 
-The app uses two background threads:
+## 2. Video-based Subtitle Generator
 
-1. Audio capture thread
-2. Transcription thread
+**Location:** `video_subtitle_generation/`
 
-The main thread runs the subtitle overlay UI.
+Generates real-time subtitles by capturing on-screen subtitles from videos, performing OCR and translation, and displaying them in an overlay.
 
-## Requirements
+### Features-
 
-Install dependencies:
+- Screen capture of user-selected region
+- OCR using EasyOCR to extract on-screen subtitles
+- Translates from any language to any language using Argos Translate
+- Overlay window for live subtitles
 
-```bash
-pip install faster-whisper customtkinter numpy
-```
-
-Install FFmpeg:
-
-- Windows: Download from <https://ffmpeg.org/download.html>
-- macOS: `brew install ffmpeg`
-- Linux: `sudo apt install ffmpeg`
-
-Make sure PulseAudio monitor device exists:
+### Pipeline-
 
 ```bash
-pactl list sources | grep monitor
+Screen Capture
+     ↓
+Image Queue
+     ↓
+OCR (EasyOCR)
+     ↓
+Text Queue
+     ↓
+Context-aware Translation (Argos Translate)
+     ↓
+Overlay Queue
+     ↓
+Subtitle Overlay Window
 ```
-
-Then update device name in: `audio_capture.py`
-
-## Running the Application
-
-```bash
-python app.py
-```
-
-Then:
-
-1. Play a video
-2. Subtitles will appear at the bottom of the screen
-3. Overlay stays on top of all windows
-
-> [!NOTE]
-> *Known issue:* The audio chunk capturing, and translation take time, so the subtitles appear with a delay of ~5 sec when using GPU (more if using CPU), making the video and subtitles out of sync.
-> The small model is faster but less accurate, while the medium model is more accurate but slower. You can experiment with different models in `transcriber.py` to find the best balance for your use case.
