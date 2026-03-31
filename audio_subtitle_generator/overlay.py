@@ -7,17 +7,19 @@ class SubtitleOverlay:
 
         self.app = ctk.CTk()
         self.app.geometry("1000x120+400+800")
-        self.app.overrideredirect(True)
+        self.app.after_idle(self.app.attributes, "-alpha", 0.5)
+        #self.app.overrideredirect(True)
         self.app.attributes("-topmost", True)
-        self.app.attributes("-alpha", 0.85)
+        #self.app.attributes("-alpha", 0.85)
 
         self.label = ctk.CTkLabel(
             self.app,
             text="",
-            font=("Arial", 28),
-            wraplength=900
+            font=("Arial", 28)
         )
         self.label.pack(expand=True, fill="both")
+        
+        self.label.bind('<Configure>', lambda e: self.label.configure(wraplength=self.label.winfo_width(),font=("Arial", int(self.label.winfo_height() / 120 * - 22))))
 
         self.update_text()
 
@@ -28,7 +30,7 @@ class SubtitleOverlay:
             self.label.configure(text=text)
         except:
             pass
-
+            
         self.app.after(200, self.update_text)
 
     def run(self):
