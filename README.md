@@ -6,6 +6,8 @@ Regardless, the installation instructions are the same as his, just make sure yo
 
 I only made the word wrapping and font size dynamic for the **audio subtitle generator**, so don't expect the video one to have the same, but I believe both are coded the same so you can just copy and paste the audio one directly into the video one and it should be fine. I haven't tested it myself as I have no use for the video one at the moment.
 
+**EDIT:** Turns out it is the same for OCR/video, I've updated the code to reflect the changes.
+
 There's no opacity in the overlay code as I am on **Zorin**, an **Ubuntu** OS so it cannot have transparent windows unless you use a random gnome extension called "[transparent window](https://extensions.gnome.org/extension/1454/transparent-window/)".
 
 Anyway, I hope y'all enjoy the free real-time subtitles like I did and make sure to support [DevadattaP](https://github.com/DevadattaP/subtitle_generator) by checking out any of their other creations if they have any 🫡. Thanks for the creation, king 👑.
