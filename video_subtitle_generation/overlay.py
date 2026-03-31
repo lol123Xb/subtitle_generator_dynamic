@@ -2,32 +2,33 @@ import customtkinter as ctk
 
 
 class SubtitleOverlay:
-    def __init__(self, overlay_queue):
-        self.overlay_queue = overlay_queue
+    def __init__(self, text_queue):
+        self.text_queue = text_queue
 
         self.app = ctk.CTk()
-        self.app.geometry("1000x120+500+950")  # "{width}x{height}+{x_offset}+{y_offset}"
-        self.app.overrideredirect(True)
+        self.app.geometry("1000x120+400+800")
+        #self.app.overrideredirect(True)
         self.app.attributes("-topmost", True)
-        self.app.attributes("-alpha", 0.85)
+        #self.app.attributes("-alpha", 0.85)
 
         self.label = ctk.CTkLabel(
             self.app,
             text="",
-            font=("Arial", 28),
-            wraplength=900
+            font=("Arial", 28)
         )
         self.label.pack(expand=True, fill="both")
+        
+        self.label.bind('<Configure>', lambda e: self.label.configure(wraplength=self.label.winfo_width(),font=("Arial", int(self.label.winfo_height() / 120 * - 22))))
 
         self.update_text()
 
     def update_text(self):
         try:
-            text = self.overlay_queue.get_nowait()
+            text = self.text_queue.get_nowait()
             self.label.configure(text=text)
         except:
             pass
-
+            
         self.app.after(200, self.update_text)
 
     def run(self):
