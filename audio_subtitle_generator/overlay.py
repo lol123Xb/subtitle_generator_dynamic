@@ -7,7 +7,6 @@ class SubtitleOverlay:
 
         self.app = ctk.CTk()
         self.app.geometry("1000x120+400+800")
-        self.app.after_idle(self.app.attributes, "-alpha", 0.5)
         #self.app.overrideredirect(True)
         self.app.attributes("-topmost", True)
         #self.app.attributes("-alpha", 0.85)
